@@ -81,8 +81,6 @@ int main(int argc, char **argv){
     // **********************************************************//
     // **** Start the Simulation!  Cycle index start from 1  *** //
     // **********************************************************//
-    cudaProfilerStart();
-
     for (int cycle = param.first_cycle_n; cycle < (param.first_cycle_n + param.ncycles); cycle++) {
         
         std::cout << std::endl;
@@ -93,7 +91,8 @@ int main(int argc, char **argv){
         // set to zero the densities - needed for interpolation
         setZeroDensities(&idn,ids,&grd,param.ns);
         
-        
+        // start profiler for mover_PC
+        cudaProfilerStart();
         
         // implicit mover
         iMover = cpuSecond(); // start timer for mover
@@ -101,14 +100,22 @@ int main(int argc, char **argv){
             mover_PC(&part[is],&field,&grd,&param);
         eMover += (cpuSecond() - iMover); // stop timer for mover
         
+        // stop profiler for mover_PC
+        cudaProfilerStop();
         
         
-        
+        // start profiler for interpP2G
+        cudaProfilerStart();
+
         // interpolation particle to grid
         iInterp = cpuSecond(); // start timer for the interpolation step
         // interpolate species
         for (int is=0; is < param.ns; is++)
             interpP2G(&part[is],&ids[is],&grd);
+
+        // stop profiler for interpP2G
+        cudaProfilerStop();
+        
         // apply BC to interpolated densities
         for (int is=0; is < param.ns; is++)
             applyBCids(&ids[is],&grd,&param);
@@ -131,7 +138,6 @@ int main(int argc, char **argv){
     
     }  // end of one PIC cycle
 
-    cudaProfilerStop();
     
     /// Release the resources
     // deallocate field
