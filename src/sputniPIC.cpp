@@ -30,6 +30,9 @@
 // Read and output operations
 #include "RW_IO.h"
 
+// Verification
+#include "Verification.h"
+
 // Cuda profiler functions
 #include <cuda_profiler_api.h>
 
@@ -115,7 +118,7 @@ int main(int argc, char **argv){
 
         // stop profiler for interpP2G
         cudaProfilerStop();
-        
+
         // apply BC to interpolated densities
         for (int is=0; is < param.ns; is++)
             applyBCids(&ids[is],&grd,&param);
@@ -164,6 +167,12 @@ int main(int argc, char **argv){
     std::cout << "   Interp. Time / Cycle (s) = " << eInterp/param.ncycles  << std::endl;
     std::cout << "**************************************" << std::endl;
     
+    // Print if results are correct
+    std::cout << std::endl;
+    std::cout << "**************************************" << std::endl;
+    std::cout << "   Results are correct: " << verifyRhonet << std::endl;
+    std::cout << "**************************************" << std::endl;
+
     // exit
     return 0;
 }
