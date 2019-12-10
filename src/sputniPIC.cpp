@@ -141,6 +141,8 @@ int main(int argc, char **argv){
     
     }  // end of one PIC cycle
 
+    // verification result
+    bool verification_result = verifyRhonet(&grid, &idn);
     
     /// Release the resources
     // deallocate field
@@ -170,7 +172,7 @@ int main(int argc, char **argv){
     // Print if results are correct
     std::cout << std::endl;
     std::cout << "**************************************" << std::endl;
-    std::cout << "   Results are correct: " << verifyRhonet << std::endl;
+    std::cout << "   Results are correct: " << verification_result << std::endl;
     std::cout << "**************************************" << std::endl;
 
     // exit
