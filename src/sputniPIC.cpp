@@ -30,6 +30,9 @@
 // Read and output operations
 #include "RW_IO.h"
 
+// Cuda profiler functions
+#include <cuda_profiler_api.h>
+
 
 int main(int argc, char **argv){
     
@@ -78,6 +81,8 @@ int main(int argc, char **argv){
     // **********************************************************//
     // **** Start the Simulation!  Cycle index start from 1  *** //
     // **********************************************************//
+    cudaProfilerStart();
+
     for (int cycle = param.first_cycle_n; cycle < (param.first_cycle_n + param.ncycles); cycle++) {
         
         std::cout << std::endl;
@@ -125,6 +130,8 @@ int main(int argc, char **argv){
         
     
     }  // end of one PIC cycle
+
+    cudaProfilerStop();
     
     /// Release the resources
     // deallocate field
