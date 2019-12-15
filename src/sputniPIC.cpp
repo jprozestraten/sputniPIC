@@ -142,7 +142,7 @@ int main(int argc, char **argv){
     }  // end of one PIC cycle
 
     // verification result
-    bool verification_result = verifyRhonet(&grid, &idn);
+    bool verification_result = verifyRhonet(&grd, &idn);
     
     /// Release the resources
     // deallocate field

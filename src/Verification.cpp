@@ -1,9 +1,9 @@
 #include <iostream>
+#include <fstream>
 #include <cmath>
 
 #include "Verification.h"
 #include "Grid.h"
-#include "InterpDensSpecies.h"
 
 /** verify results by checking idn->rhon against /testdata/rho_net, tol is relative */
 bool verifyRhonet(struct grid *grd, struct interpDensNet *, FPinterp tol = 1e-6)
@@ -29,7 +29,7 @@ bool verifyRhonet(struct grid *grd, struct interpDensNet *, FPinterp tol = 1e-6)
                 fin >> num_in;
 
                 // check if file reading went well
-                if fin.good() {
+                if (fin.good()) {
                     // if numbers the same: increment counter, else false
                     if (fabs((num_in - idn->rhon[i][j][k]) / min(num_in, idn->rhon[i][j][k])) < tol) {
                         res++;
