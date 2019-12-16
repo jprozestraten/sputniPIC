@@ -41,9 +41,9 @@ bool verifyRhonet(struct grid *grd, struct interpDensNet *idn, FPinterp tol)
                         res++;
                     }
                     else {
-                        std::cout << std::endl << "Wrong number at line " << line << std::endl;
-                        std::cout << "rho_net.out " << num_in << " | " << "rhon[" << i << "][" << j << "][" << k << "]" << idn->rhon[i][j][k] << std::endl;
-                        std::cout << "Relative difference " << std::abs((num_in - idn->rhon[i][j][k]) / std::min(num_in, idn->rhon[i][j][k])) << std::endl;
+                        std::cerr << "Wrong number at line " << line << std::endl;
+                        std::cerr << "rho_net.out " << num_in << " | " << "rhon[" << i << "][" << j << "][" << k << "] " << idn->rhon[i][j][k] << std::endl;
+                        std::cerr << "Relative difference " << std::abs((num_in - idn->rhon[i][j][k]) / std::min(num_in, idn->rhon[i][j][k])) << std::endl;
                         return false;
                     }
                 } 
@@ -55,10 +55,9 @@ bool verifyRhonet(struct grid *grd, struct interpDensNet *idn, FPinterp tol)
         }
     }
 
-    std::cout << res << std::endl;
-
     // if res == number of lines in output file
     if (res == 32768) {
+        std::cerr << "Number of correct lines is " << res << "/32768" << std::endl;
         return true;
     }
     else {

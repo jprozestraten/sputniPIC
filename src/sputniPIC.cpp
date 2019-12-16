@@ -140,10 +140,14 @@ int main(int argc, char **argv){
         
     
     }  // end of one PIC cycle
-
-    // verification result
-    bool verification_result = verifyRhonet(&grd, &idn);
     
+    // Print if results are correct
+    std::cout << std::endl;
+    std::cout << "****************************" << std::endl;
+    bool verification_result = verifyRhonet(&grd, &idn);
+    std::cout << "   Results are correct: " << verification_result << std::endl;
+    std::cout << "****************************" << std::endl;
+
     /// Release the resources
     // deallocate field
     grid_deallocate(&grd);
@@ -169,12 +173,6 @@ int main(int argc, char **argv){
     std::cout << "   Interp. Time / Cycle (s) = " << eInterp/param.ncycles  << std::endl;
     std::cout << "**************************************" << std::endl;
     
-    // Print if results are correct
-    std::cout << std::endl;
-    std::cout << "**************************************" << std::endl;
-    std::cout << "   Results are correct: " << verification_result << std::endl;
-    std::cout << "**************************************" << std::endl;
-
     // exit
     return 0;
 }
