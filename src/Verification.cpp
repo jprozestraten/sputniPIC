@@ -23,11 +23,16 @@ bool verifyRhonet(struct grid *grd, struct interpDensNet *idn, FPinterp tol)
     int nyn = grd->nyn;
     int nzn = grd->nzn;
 
+    // debug: line counter
+    int line = 0;
+
     // checks all numbers, same loop as in RW_IO.cpp at end
     for (int k = 1; k < nzn - 2; k++) {
         for (int j = 1; j < nyn - 2; j++) {
             for (int i = 1; i < nxn - 2; i++) {
                 fin >> num_in;
+
+                line++;
 
                 // check if file reading went well
                 if (fin.good()) {
@@ -36,6 +41,9 @@ bool verifyRhonet(struct grid *grd, struct interpDensNet *idn, FPinterp tol)
                         res++;
                     }
                     else {
+                        std::cout << std::endl << "Wrong number at line " << line << std::endl;
+                        std::cout << "rho_net.out " << num_in << " | " << "rhon[" << i << "][" << j << "][" << k << "]" << idn->rhon[i][j][k] << std::endl;
+                        std::cout << "Relative difference " << std::abs((num_in - idn->rhon[i][j][k]) / std::min(num_in, idn->rhon[i][j][k])) << std::endl;
                         return false;
                     }
                 } 
@@ -46,6 +54,8 @@ bool verifyRhonet(struct grid *grd, struct interpDensNet *idn, FPinterp tol)
             }
         }
     }
+
+    std::cout << res << std::endl;
 
     // if res == number of lines in output file
     if (res == 32768) {
