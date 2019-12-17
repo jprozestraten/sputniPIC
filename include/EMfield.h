@@ -27,6 +27,7 @@ struct EMfield {
     
 };
 
+void field_allocate_gpu(struct EMfield* field_gpu, struct grid* grd);
 
 void init_field_gpu(struct EMfield* field, struct EMfield* field_gpu, struct grid* grd);
 

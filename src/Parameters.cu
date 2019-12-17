@@ -1,6 +1,27 @@
 #include <string>
 #include "Parameters.h"
 
+/*
+
+void param_allocate_gpu(struct parameters* param_gpu)
+{
+    cudaMalloc(&(param_gpu->npcelx), NS_MAX*sizeof(int));
+    cudaMalloc(&(param_gpu->npcely), NS_MAX*sizeof(int));
+    cudaMalloc(&(param_gpu->npcelz), NS_MAX*sizeof(int));
+    cudaMalloc(&(param_gpu->np), NS_MAX*sizeof(long));
+    cudaMalloc(&(param_gpu->npMax), NS_MAX*sizeof(long));
+    cudaMalloc(&(param_gpu->qom), NS_MAX*sizeof(double));
+    cudaMalloc(&(param_gpu->rhoINIT), NS_MAX*sizeof(double));
+    cudaMalloc(&(param_gpu->uth), NS_MAX*sizeof(double));
+    cudaMalloc(&(param_gpu->vth), NS_MAX*sizeof(double));
+    cudaMalloc(&(param_gpu->wth), NS_MAX*sizeof(double));
+    cudaMalloc(&(param_gpu->u0), NS_MAX*sizeof(double));
+    cudaMalloc(&(param_gpu->v0), NS_MAX*sizeof(double));
+    cudaMalloc(&(param_gpu->w0), NS_MAX*sizeof(double));
+}
+*/
+
+
 
 void init_param_gpu(struct parameters* param, struct parameters* param_gpu)
 {

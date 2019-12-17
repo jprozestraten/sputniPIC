@@ -87,14 +87,20 @@ int main(int argc, char **argv){
     EMfield* field_gpu;
     particles* part_gpu;
 
-    //Data allocation of GPU variables for mover_PC
+    //Allocation of pointers to struct for GPU variables for mover_PC
     cudaMalloc(&param_gpu, sizeof(parameters));
-    cudaMalloc(&grd_gpu, sizeof(grid));
+    cudaMalloc(&grd_gpu, sizeof(grd_gpu));
+    cudaMalloc(&field_gpu, sizeof(field_gpu));
+    cudaMalloc(&part_gpu, sizeof(part_gpu));
+
+    //Data allocation of arrays in structs
 
 
     //Data copy of GPU variables for mover_PC
-
-
+    init_param_gpu(&(param), param_gpu);
+    init_grid_gpu(&(grd), grd_gpu);
+    init_field_gpu(&(field), field_gpu, &(grd));
+    init_part_gpu(part, part_gpu);
 
 
     // **********************************************************//
@@ -116,7 +122,7 @@ int main(int argc, char **argv){
         // implicit mover
         iMover = cpuSecond(); // start timer for mover
         for (int is=0; is < param.ns; is++)
-            cpu_mover_PC(&part[is],&field,&grd,&param);
+            //gpu_mover_PC(&part[is],&field,&grd,&param);
         eMover += (cpuSecond() - iMover); // stop timer for mover
         
         // stop profiler for mover_PC

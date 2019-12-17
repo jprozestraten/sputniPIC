@@ -1,6 +1,15 @@
 #include <iostream>
 #include "Grid.h"
 
+void grid_allocate_gpu(struct grid* grd, struct grid* grd_gpu)
+{
+    cudaMalloc(&(grd_gpu->XN_flat), grd->nxn*grd->nyn*grd->nzn*sizeof(FPfield));
+    cudaMalloc(&(grd_gpu->YN_flat), grd->nxn*grd->nyn*grd->nzn*sizeof(FPfield));
+    cudaMalloc(&(grd_gpu->ZN_flat), grd->nxn*grd->nyn*grd->nzn*sizeof(FPfield));
+ }   
+
+
+
 void init_grid_gpu(struct grid* grd, struct grid* grd_gpu)
 {
     grd_gpu->nxc = grd->nxc;

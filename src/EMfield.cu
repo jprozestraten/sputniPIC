@@ -1,6 +1,18 @@
 #include "EMfield.h"
 
 
+void field_allocate_gpu(struct EMfield* field_gpu, struct grid* grd)
+{
+    cudaMalloc(&(field_gpu->Ex_flat), grd->nxn*grd->nyn*grd->nzn*sizeof(FPfield));
+    cudaMalloc(&(field_gpu->Ey_flat), grd->nxn*grd->nyn*grd->nzn*sizeof(FPfield));
+    cudaMalloc(&(field_gpu->Ez_flat), grd->nxn*grd->nyn*grd->nzn*sizeof(FPfield));
+    cudaMalloc(&(field_gpu->Bxn_flat), grd->nxn*grd->nyn*grd->nzn*sizeof(FPfield));
+    cudaMalloc(&(field_gpu->Byn_flat), grd->nxn*grd->nyn*grd->nzn*sizeof(FPfield));
+    cudaMalloc(&(field_gpu->Bzn_flat), grd->nxn*grd->nyn*grd->nzn*sizeof(FPfield));
+}
+
+
+
 void init_field_gpu(struct EMfield* field, struct EMfield* field_gpu, struct grid* grd)
 {
     /* Electric field defined on nodes: last index is component */

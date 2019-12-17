@@ -52,7 +52,10 @@ struct particles {
     
 };
 
-void init_part_gpu(struct particles*, struct particles*, struct parameters*);
+void particle_allocate_gpu(struct particles* part, struct particles* part_gpu);
+
+
+void init_part_gpu(struct particles*, struct particles*);
 
 /** allocate particle arrays */
 void particle_allocate(struct parameters*, struct particles*, int);
@@ -61,8 +64,7 @@ void particle_allocate(struct parameters*, struct particles*, int);
 void particle_deallocate(struct particles*);
 
 /** particle mover */
-int mover_PC(struct particles*, struct EMfield*, struct grid*, struct parameters*);
-
+__global__ void gpu_mover_PC(struct particles*, struct EMfield*, struct grid*, struct parameters*);
 /** Interpolation Particle --> Grid: This is for species */
 void interpP2G(struct particles*, struct interpDensSpecies*, struct grid*);
 
