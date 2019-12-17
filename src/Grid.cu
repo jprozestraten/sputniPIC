@@ -1,6 +1,68 @@
 #include <iostream>
 #include "Grid.h"
 
+void init_grid_gpu(struct grid* grd, struct grid* grd_gpu)
+{
+    grd_gpu->nxc = grd->nxc;
+    /** number of nodes - X direction, including + 2 extra nodes for guard cells */
+    grd_gpu->nxn = grd->nxn;
+    /** number of cell - Y direction, including + 2 (guard cells) */
+    grd_gpu->nyc = grd->nyc;
+    /** number of nodes - Y direction, including + 2 extra nodes for guard cells */
+    grd_gpu->nyn = grd->nyc;
+    /** number of cell - Z direction, including + 2 (guard cells) */
+    grd_gpu->nzc = grd->nzc;
+    /** number of nodes - Z direction, including + 2 extra nodes for guard cells */
+    grd_gpu->nzn = grd->nzn;
+    /** dx = space step - X direction */
+    grd_gpu->dx = grd->dx;
+    /** dy = space step - Y direction */
+    grd_gpu->dy = grd->dy;
+    /** dz = space step - Z direction */
+    grd_gpu->dz = grd->dz;
+    /** invdx = 1/dx */
+    grd_gpu->invdx = grd_gpu->invdx;
+    /** invdy = 1/dy */
+    grd_gpu->invdy = grd_gpu->invdy;
+    /** invdz = 1/dz */
+    grd_gpu->invdz = grd_gpu->invdz;
+    /** invol = inverse of volume*/
+    grd_gpu->invVOL = grd_gpu->invVOL;
+    /** local grid boundaries coordinate  */
+    grd_gpu->xStart = grd->xStart;
+    grd_gpu->xEnd = grd->xEnd;
+    grd_gpu->yStart = grd->yStart;
+    grd_gpu->yEnd = grd->yEnd;
+    grd_gpu->zStart = grd->zStart;
+    grd_gpu->zEnd = grd->zEnd;
+
+    /** domain size */
+    grd_gpu->Lx = grd->Lx;
+    grd_gpu->Ly = grd->Ly;
+    grd_gpu->Lz = grd->Lz;
+    
+    /** Periodicity for fields X **/
+    grd_gpu->PERIODICX = grd->PERIODICX;
+    /** Periodicity for fields Y **/
+    grd_gpu->PERIODICY = grd->PERIODICY;
+    /** Periodicity for fields Z **/
+    grd_gpu->PERIODICZ = grd->PERIODICZ;
+    
+    // Nodes coordinate
+    /** coordinate node X */
+    cudaMemcpy(grd_gpu->XN_flat, grd->XN_flat, grd->nxn*grd->nyn*grd->nzn*sizeof(FPfield), cudaMemcpyHostToDevice);
+    grd_gpu->XN = NULL;
+    /** coordinate node Y */
+    cudaMemcpy(grd_gpu->YN_flat, grd->YN_flat, grd->nxn*grd->nyn*grd->nzn*sizeof(FPfield), cudaMemcpyHostToDevice);
+    grd_gpu->YN = NULL;
+    /** coordinate node Z */
+    cudaMemcpy(grd_gpu->ZN_flat, grd->ZN_flat, grd->nxn*grd->nyn*grd->nzn*sizeof(FPfield), cudaMemcpyHostToDevice);
+    grd_gpu->ZN = NULL;
+
+}
+
+
+
 /** Set up the grid quantities */
 void setGrid(struct parameters* param, struct grid* grd)
 {

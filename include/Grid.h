@@ -61,6 +61,9 @@ struct grid {
     
 };
 
+/** Copy grid variables to gpu  **/
+void init_grid_gpu(struct grid* grd, struct grid* grd_gpu);
+
 /** Set up the grid quantities */
 void setGrid(struct parameters*, struct grid*);
 

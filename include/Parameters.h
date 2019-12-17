@@ -215,4 +215,7 @@ struct parameters {
     std::string WaveFile;
     
 };
+
+void init_param_gpu(struct parameters* param, struct parameters* param_gpu);
+
 #endif

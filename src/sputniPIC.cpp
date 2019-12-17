@@ -80,7 +80,23 @@ int main(int argc, char **argv){
     // Initialization
     initGEM(&param,&grd,&field,&field_aux,part,ids);
     
-    
+
+    // Declaration of GPU variables for mover_PC
+    parameters* param_gpu;
+    grid* grd_gpu;
+    EMfield* field_gpu;
+    particles* part_gpu;
+
+    //Data allocation of GPU variables for mover_PC
+    cudaMalloc(&param_gpu, sizeof(parameters));
+    cudaMalloc(&grd_gpu, sizeof(grid));
+
+
+    //Data copy of GPU variables for mover_PC
+
+
+
+
     // **********************************************************//
     // **** Start the Simulation!  Cycle index start from 1  *** //
     // **********************************************************//
@@ -100,7 +116,7 @@ int main(int argc, char **argv){
         // implicit mover
         iMover = cpuSecond(); // start timer for mover
         for (int is=0; is < param.ns; is++)
-            mover_PC(&part[is],&field,&grd,&param);
+            cpu_mover_PC(&part[is],&field,&grd,&param);
         eMover += (cpuSecond() - iMover); // stop timer for mover
         
         // stop profiler for mover_PC
