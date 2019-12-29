@@ -54,8 +54,7 @@ struct particles {
 
 void particle_allocate_gpu(struct particles* part, struct particles* part_gpu);
 
-
-void init_part_gpu(struct particles*, struct particles*);
+void particle_deallocate_gpu(struct particles* part_gpu);
 
 /** allocate particle arrays */
 void particle_allocate(struct parameters*, struct particles*, int);

@@ -29,7 +29,7 @@ struct EMfield {
 
 void field_allocate_gpu(struct EMfield* field_gpu, struct grid* grd);
 
-void init_field_gpu(struct EMfield* field, struct EMfield* field_gpu, struct grid* grd);
+void field_deallocate_gpu(struct EMfield* field_gpu);
 
 /** allocate electric and magnetic field */
 void field_allocate(struct grid*, struct EMfield*);

@@ -63,8 +63,7 @@ struct grid {
 
 void grid_allocate_gpu(struct grid* grd, struct grid* grd_gpu);
 
-/** Copy grid variables to gpu  **/
-void init_grid_gpu(struct grid* grd, struct grid* grd_gpu);
+void grid_deallocate_gpu(struct grid* grd_gpu);
 
 /** Set up the grid quantities */
 void setGrid(struct parameters*, struct grid*);

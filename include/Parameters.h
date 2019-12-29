@@ -216,8 +216,5 @@ struct parameters {
     
 };
 
-//void param_allocate_gpu(struct parameters* param_gpu);
-
-void init_param_gpu(struct parameters* param, struct parameters* param_gpu);
 
 #endif

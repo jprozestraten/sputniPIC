@@ -1,7 +1,7 @@
 #include "EMfield.h"
 
 
-void field_allocate_gpu(struct EMfield* field_gpu, struct grid* grd)
+/*void field_allocate_gpu(struct EMfield* field_gpu, struct grid* grd)
 {
     cudaMalloc(&(field_gpu->Ex_flat), grd->nxn*grd->nyn*grd->nzn*sizeof(FPfield));
     cudaMalloc(&(field_gpu->Ey_flat), grd->nxn*grd->nyn*grd->nzn*sizeof(FPfield));
@@ -12,26 +12,15 @@ void field_allocate_gpu(struct EMfield* field_gpu, struct grid* grd)
 }
 
 
-
-void init_field_gpu(struct EMfield* field, struct EMfield* field_gpu, struct grid* grd)
+void field_deallocate_gpu(struct EMfield* field_gpu)
 {
-    /* Electric field defined on nodes: last index is component */
-    cudaMemcpy(field_gpu->Ex_flat, field->Ex_flat, grd->nxn*grd->nyn*grd->nzn*sizeof(FPfield), cudaMemcpyHostToDevice);
-    field_gpu->Ex = NULL;
-    cudaMemcpy(field_gpu->Ey_flat, field->Ey_flat, grd->nxn*grd->nyn*grd->nzn*sizeof(FPfield), cudaMemcpyHostToDevice);
-    field_gpu->Ey = NULL;
-    cudaMemcpy(field_gpu->Ez_flat, field->Ez_flat, grd->nxn*grd->nyn*grd->nzn*sizeof(FPfield), cudaMemcpyHostToDevice);
-    field_gpu->Ez = NULL;
-    /* Magnetic field defined on nodes: last index is component */
-    field_gpu->Bxn = NULL;
-    cudaMemcpy(field_gpu->Bxn_flat, field->Bxn_flat, grd->nxn*grd->nyn*grd->nzn*sizeof(FPfield), cudaMemcpyHostToDevice);
-    field_gpu->Byn = NULL;
-    cudaMemcpy(field_gpu->Byn_flat, field->Byn_flat, grd->nxn*grd->nyn*grd->nzn*sizeof(FPfield), cudaMemcpyHostToDevice);
-    field_gpu->Bzn = NULL;
-    cudaMemcpy(field_gpu->Bzn_flat, field->Bzn_flat, grd->nxn*grd->nyn*grd->nzn*sizeof(FPfield), cudaMemcpyHostToDevice);
-
-}
-
+    cudaFree(field_gpu->Ex_flat);
+    cudaFree(field_gpu->Ey_flat);
+    cudaFree(field_gpu->Ez_flat);
+    cudaFree(field_gpu->Bxn_flat);
+    cudaFree(field_gpu->Byn_flat);
+    cudaFree(field_gpu->Bzn_flat);
+} */
 
 
 /** allocate electric and magnetic field */
