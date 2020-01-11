@@ -1,7 +1,7 @@
 #include <iostream>
 #include "Grid.h"
 
-/*void grid_allocate_gpu(struct grid* grd, struct grid* grd_gpu)
+void grid_allocate_gpu(struct grid* grd, struct grid_a* grd_gpu)
 {
 
     cudaMalloc(&(grd_gpu->XN_flat), grd->nxn*grd->nyn*grd->nzn*sizeof(FPfield));
@@ -9,13 +9,19 @@
     cudaMalloc(&(grd_gpu->ZN_flat), grd->nxn*grd->nyn*grd->nzn*sizeof(FPfield));
  }   
 
-void grid_deallocate_gpu(struct grid* grd_gpu)
+void grid_deallocate_gpu(struct grid_a* grd_gpu)
 {
     cudaFree(grd_gpu->XN_flat);
     cudaFree(grd_gpu->YN_flat);
     cudaFree(grd_gpu->ZN_flat);
- }   */
+ }   
 
+void grid_copy(struct grid* grd, struct grid_a* grd_gpu)
+{
+    cudaMemcpy(&(grd_gpu->XN_flat), &(grd->XN_flat), grd->nxn*grd->nyn*grd->nzn*sizeof(FPfield), cudaMemcpyHostToDevice);
+    cudaMemcpy(&(grd_gpu->YN_flat), &(grd->YN_flat), grd->nxn*grd->nyn*grd->nzn*sizeof(FPfield), cudaMemcpyHostToDevice);
+    cudaMemcpy(&(grd_gpu->ZN_flat), &(grd->ZN_flat), grd->nxn*grd->nyn*grd->nzn*sizeof(FPfield), cudaMemcpyHostToDevice);
+}
 
 
 /** Set up the grid quantities */

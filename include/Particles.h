@@ -10,6 +10,8 @@
 #include "EMfield.h"
 #include "InterpDensSpecies.h"
 
+#define TPB 256
+
 struct particles {
     
     /** species ID: 0, 1, 2 , ... */
@@ -52,9 +54,23 @@ struct particles {
     
 };
 
-void particle_allocate_gpu(struct particles* part, struct particles* part_gpu);
+//struct of the arrays in the particles struct
+struct particles_a {
 
-void particle_deallocate_gpu(struct particles* part_gpu);
+    FPpart* x; FPpart*  y; FPpart* z;
+    FPpart* u; FPpart* v; FPpart* w;
+
+};
+
+enum copy_way{CPU_TO_GPU, GPU_TO_CPU};
+
+
+void particle_allocate_gpu(struct particles* part, struct particles_a* part_gpu);
+
+
+void particle_deallocate_gpu(struct particles_a* part_gpu);
+
+void particle_copy(struct particles* part, struct particles_a* part_gpu, copy_way c);
 
 /** allocate particle arrays */
 void particle_allocate(struct parameters*, struct particles*, int);
@@ -63,7 +79,12 @@ void particle_allocate(struct parameters*, struct particles*, int);
 void particle_deallocate(struct particles*);
 
 /** particle mover */
-__global__ void gpu_mover_PC(struct particles*, struct EMfield*, struct grid*, struct parameters*);
+void gpu_mover_PC(struct particles* part, struct EMfield* field, struct grid* grd, struct parameters* param,
+                             struct particles_a* part_gpu, struct EMfield_a* field_gpu, struct grid_a* grid_gpu);
+
+__global__ void move_particle(struct particles* part, struct EMfield* field, struct grid* grd, struct parameters* param,
+                                        struct particles_a* part_gpu, struct EMfield_a* field_gpu, struct grid_a* grid_gpu);
+
 /** Interpolation Particle --> Grid: This is for species */
 void interpP2G(struct particles*, struct interpDensSpecies*, struct grid*);
 

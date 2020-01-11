@@ -86,16 +86,12 @@ int main(int argc, char **argv){
 
 
     // Declaration of GPU variables for mover_PC
-    parameters* param_gpu;
-    grid* grd_gpu;
-    EMfield* field_gpu;
-    particles* part_gpu;
+    grid_a* grd_gpu;
+    EMfield_a* field_gpu;
+    particles_a* part_gpu;
 
     //Allocation of pointers to struct for GPU variables for mover_PC
-    cudaMalloc(&param_gpu, sizeof(parameters));
-    cudaMalloc(&grd_gpu, sizeof(grd_gpu));
-    cudaMalloc(&field_gpu, sizeof(field_gpu));
-    cudaMalloc(&part_gpu, sizeof(part_gpu));
+    particle_allocate_gpu(part, part_gpu);
 
 
     //Data allocation of arrays in structs
@@ -105,12 +101,10 @@ int main(int argc, char **argv){
 
 
     //Data copy of GPU variables for mover_PC
-    cudaMemcpy(param_gpu, &(param), sizeof(parameters), cudaMemcpyHostToDevice);
-    cudaMemcpy(grd_gpu, &(grd), sizeof(grid), cudaMemcpyHostToDevice);
-    cudaMemcpy(field_gpu, &(field), sizeof(EMfield), cudaMemcpyHostToDevice);
-    cudaMemcpy(part_gpu, &(part), sizeof(particles), cudaMemcpyHostToDevice);
+    field_allocate_gpu(field_gpu, &grd);
+    grid_allocate_gpu(&grd, grd_gpu);
 
-    int TPB = 256;
+
 
     // **********************************************************//
     // **** Start the Simulation!  Cycle index start from 1  *** //
@@ -124,17 +118,14 @@ int main(int argc, char **argv){
     
         // set to zero the densities - needed for interpolation
         setZeroDensities(&idn,ids,&grd,param.ns);
-        
+
         // start profiler for mover_PC
         cudaProfilerStart();
         // implicit mover
         iMover = cpuSecond(); // start timer for mover
-        for (int is=0; is < param.ns; is++)
-        {
-            cudaMemcpy(part_gpu, &(part), sizeof(particles), cudaMemcpyHostToDevice);
-            gpu_mover_PC<<<(part_gpu->nop + TPB - 1)/TPB, TPB>>>(&part_gpu[is],field_gpu,grd_gpu,param_gpu);
-            cudaMemcpy(&(part), part_gpu,  sizeof(particles), cudaMemcpyDeviceToHost);
-        }
+
+        gpu_mover_PC(part, &field, &grd, &param, part_gpu, field_gpu, grd_gpu);
+        
         eMover += (cpuSecond() - iMover); // stop timer for mover
         // stop profiler for mover_PC
         cudaProfilerStop();
@@ -174,10 +165,6 @@ int main(int argc, char **argv){
     
     }  // end of one PIC cycle
 
-    cudaMemcpy(&(param), param_gpu, sizeof(parameters), cudaMemcpyDeviceToHost);
-    cudaMemcpy(&(grd), grd_gpu, sizeof(grid), cudaMemcpyDeviceToHost);
-    cudaMemcpy(&(field), field_gpu, sizeof(EMfield), cudaMemcpyDeviceToHost);
-    cudaMemcpy(&(part), part_gpu,  sizeof(particles), cudaMemcpyDeviceToHost);
 
     // Print if results are correct
     std::cout << std::endl;
@@ -211,15 +198,10 @@ int main(int argc, char **argv){
     std::cout << "   Interp. Time / Cycle (s) = " << eInterp/param.ncycles  << std::endl;
     std::cout << "**************************************" << std::endl;
     
-    /*grid_deallocate_gpu(grd_gpu);
+
+    grid_deallocate_gpu(grd_gpu);
     field_deallocate_gpu(field_gpu);
-    particle_deallocate_gpu(part_gpu); */
-
-
-    cudaFree(param_gpu);
-    cudaFree(grd_gpu);
-    cudaFree(field_gpu);
-    cudaFree(part_gpu);
+    particle_deallocate_gpu(part_gpu);
 
     // exit
     return 0;

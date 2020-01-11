@@ -61,9 +61,23 @@ struct grid {
     
 };
 
-void grid_allocate_gpu(struct grid* grd, struct grid* grd_gpu);
+struct grid_a {
 
-void grid_deallocate_gpu(struct grid* grd_gpu);
+    // Nodes coordinate
+    /** coordinate node X */
+    FPfield* XN_flat;
+    /** coordinate node Y */
+    FPfield* YN_flat;
+    /** coordinate node Z */
+    FPfield* ZN_flat;
+
+};
+
+void grid_allocate_gpu(struct grid* grd, struct grid_a* grd_gpu);
+
+void grid_deallocate_gpu(struct grid_a* grd_gpu);
+
+void grid_copy(struct grid* grd, struct grid_a* grd_gpu);
 
 /** Set up the grid quantities */
 void setGrid(struct parameters*, struct grid*);
