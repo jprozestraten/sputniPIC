@@ -44,7 +44,7 @@ void field_allocate_gpu(struct EMfield_a* field_gpu, struct grid* grd);
 
 void field_deallocate_gpu(struct EMfield_a* field_gpu);
 
-void field_copy(struct EMfield* field, struct EMfield_a* field_gpu, struct grid* grd);
+void field_copy(struct EMfield* field, struct EMfield_a field_gpu, struct grid* grd);
 
 /** allocate electric and magnetic field */
 void field_allocate(struct grid*, struct EMfield*);

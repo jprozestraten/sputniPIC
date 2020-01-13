@@ -3,24 +3,28 @@
 
 void grid_allocate_gpu(struct grid* grd, struct grid_a* grd_gpu)
 {
+    FPfield* d_grd[3];
 
-    cudaMalloc(&(grd_gpu->XN_flat), grd->nxn*grd->nyn*grd->nzn*sizeof(FPfield));
-    cudaMalloc(&(grd_gpu->YN_flat), grd->nxn*grd->nyn*grd->nzn*sizeof(FPfield));
-    cudaMalloc(&(grd_gpu->ZN_flat), grd->nxn*grd->nyn*grd->nzn*sizeof(FPfield));
+    for (int i = 0; i < 3; i++)
+        cudaMalloc(&d_grd[i], grd->nxn*grd->nyn*grd->nzn*sizeof(FPfield));
+
+    grd_gpu->XN_flat = d_grd[0];
+    grd_gpu->YN_flat = d_grd[1];
+    grd_gpu->ZN_flat = d_grd[2];
  }   
 
 void grid_deallocate_gpu(struct grid_a* grd_gpu)
 {
-    cudaFree(grd_gpu->XN_flat);
-    cudaFree(grd_gpu->YN_flat);
-    cudaFree(grd_gpu->ZN_flat);
+    cudaFree(&(grd_gpu->XN_flat));
+    cudaFree(&(grd_gpu->YN_flat));
+    cudaFree(&(grd_gpu->ZN_flat));
  }   
 
-void grid_copy(struct grid* grd, struct grid_a* grd_gpu)
+void grid_copy(struct grid* grd, struct grid_a grd_gpu)
 {
-    cudaMemcpy(&(grd_gpu->XN_flat), &(grd->XN_flat), grd->nxn*grd->nyn*grd->nzn*sizeof(FPfield), cudaMemcpyHostToDevice);
-    cudaMemcpy(&(grd_gpu->YN_flat), &(grd->YN_flat), grd->nxn*grd->nyn*grd->nzn*sizeof(FPfield), cudaMemcpyHostToDevice);
-    cudaMemcpy(&(grd_gpu->ZN_flat), &(grd->ZN_flat), grd->nxn*grd->nyn*grd->nzn*sizeof(FPfield), cudaMemcpyHostToDevice);
+    cudaMemcpy((grd_gpu.XN_flat), (grd->XN_flat), grd->nxn*grd->nyn*grd->nzn*sizeof(FPfield), cudaMemcpyHostToDevice);
+    cudaMemcpy((grd_gpu.YN_flat), (grd->YN_flat), grd->nxn*grd->nyn*grd->nzn*sizeof(FPfield), cudaMemcpyHostToDevice);
+    cudaMemcpy((grd_gpu.ZN_flat), (grd->ZN_flat), grd->nxn*grd->nyn*grd->nzn*sizeof(FPfield), cudaMemcpyHostToDevice);
 }
 
 

@@ -73,38 +73,36 @@ int main(int argc, char **argv){
 
     // Allocate Particles
     particles *part = new particles[param.ns];
+
     // allocation
     for (int is=0; is < param.ns; is++){
         particle_allocate(&param,&part[is],is);
     }
     
-    printf("flag1\n");
 
     // Initialization
     initGEM(&param,&grd,&field,&field_aux,part,ids);
     
 
-
     // Declaration of GPU variables for mover_PC
-    grid_a* grd_gpu;
-    EMfield_a* field_gpu;
-    particles_a* part_gpu;
+    grid_a grd_gpu;
+    EMfield_a field_gpu;
+    particles_a part_gpu;
 
     //Allocation of pointers to struct for GPU variables for mover_PC
-    particle_allocate_gpu(part, part_gpu);
+    particle_allocate_gpu(part, &part_gpu);
 
 
     //Data allocation of arrays in structs
     /*grid_allocate_gpu(&grd, grd_gpu);
     field_allocate_gpu(field_gpu, &grd);
     particle_allocate_gpu(part, part_gpu); */
+    field_allocate_gpu(&field_gpu, &grd);
+    grid_allocate_gpu(&grd, &grd_gpu);
 
 
-    //Data copy of GPU variables for mover_PC
-    field_allocate_gpu(field_gpu, &grd);
-    grid_allocate_gpu(&grd, grd_gpu);
-
-
+    field_copy(&field, field_gpu, &grd);
+    grid_copy(&grd, grd_gpu);
 
     // **********************************************************//
     // **** Start the Simulation!  Cycle index start from 1  *** //
@@ -123,8 +121,11 @@ int main(int argc, char **argv){
         cudaProfilerStart();
         // implicit mover
         iMover = cpuSecond(); // start timer for mover
-
-        gpu_mover_PC(part, &field, &grd, &param, part_gpu, field_gpu, grd_gpu);
+        for (int is=0; is < param.ns; is++)
+        {
+            gpu_mover_PC(&part[is], &grd, &param, &part_gpu, field_gpu, grd_gpu);
+        }
+        cudaDeviceSynchronize();
         
         eMover += (cpuSecond() - iMover); // stop timer for mover
         // stop profiler for mover_PC
@@ -198,10 +199,9 @@ int main(int argc, char **argv){
     std::cout << "   Interp. Time / Cycle (s) = " << eInterp/param.ncycles  << std::endl;
     std::cout << "**************************************" << std::endl;
     
-
-    grid_deallocate_gpu(grd_gpu);
-    field_deallocate_gpu(field_gpu);
-    particle_deallocate_gpu(part_gpu);
+    particle_deallocate_gpu(&part_gpu);
+    grid_deallocate_gpu(&grd_gpu);
+    field_deallocate_gpu(&field_gpu);
 
     // exit
     return 0;
