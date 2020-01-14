@@ -29,6 +29,23 @@ struct interpDensSpecies {
     
 };
 
+struct interpDensSpecies_a {
+
+    FPinterp* rhon_flat; FPinterp* rhoc_flat; FPinterp* Jx_flat; FPinterp* Jy_flat; FPinterp* Jz_flat;
+    FPinterp* pxx_flat; FPinterp* pxy_flat; FPinterp* pxz_flat; FPinterp* pyy_flat; FPinterp* pyz_flat; 
+    FPinterp* pzz_flat;
+
+};
+
+enum copy_way{CPU_TO_GPU, GPU_TO_CPU};
+
+void interp_dens_species_deallocate_gpu(struct interpDensSpecies_a* ids_gpu);
+
+void interp_dens_species_allocate_gpu(struct interpDensSpecies_a* ids_gpu, struct grid* grd);
+
+void ids_copy(struct interpDensSpecies* ids, struct interpDensSpecies_a* ids_gpu, struct grid* grd, copy_way c);
+
+
 /** allocated interpolated densities per species */
 void interp_dens_species_allocate(struct grid* grd, struct interpDensSpecies* ids, int is);
 

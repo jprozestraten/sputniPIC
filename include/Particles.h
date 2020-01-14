@@ -60,16 +60,19 @@ struct particles_a {
 
     FPpart* x; FPpart*  y; FPpart* z;
     FPpart* u; FPpart* v; FPpart* w;
+    FPinterp* q;
 
 };
 
-enum copy_way{CPU_TO_GPU, GPU_TO_CPU};
+//enum copy_way{CPU_TO_GPU, GPU_TO_CPU};
 
 void particle_allocate_gpu(struct particles* part, struct particles_a* part_gpu);
 
 void particle_deallocate_gpu(struct particles_a* part_gpu);
 
 void particle_copy(struct particles* part, struct particles_a* part_gpu, copy_way c);
+
+
 
 /** allocate particle arrays */
 void particle_allocate(struct parameters*, struct particles*, int);
@@ -85,7 +88,13 @@ __global__ void move_particle(int n_sub_cycles, int part_NiterMover, FPpart qom,
                                         struct particles_a part_gpu, struct EMfield_a field_gpu, struct grid_a grid_gpu);
 
 
-/** Interpolation Particle --> Grid: This is for species */
-void interpP2G(struct particles*, struct interpDensSpecies*, struct grid*);
+
+void gpu_interpP2G(struct particles* part, struct grid* grd, struct interpDensSpecies* ids,
+                   struct particles_a* part_gpu, struct interpDensSpecies_a* ids_gpu, struct grid_a grid_gpu);
+
+__global__ void interpP2G(struct grid grd,  
+                          struct interpDensSpecies_a ids_gpu, struct particles_a part_gpu, struct grid_a grid_gpu);
+
+void cpu_interpP2G(struct particles* part, struct interpDensSpecies* ids, struct grid* grd);
 
 #endif
