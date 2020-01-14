@@ -60,10 +60,10 @@ bool verifyRhonet(struct grid *grd, struct interpDensNet *idn, FPinterp tol)
 
     // if res == number of lines in output file
     if (res == 32768) {
-        std::cerr << "Number of correct lines is " << res << "/32768" << std::endl;
         return true;
     }
     else {
+        std::cerr << "Number of correct lines is " << res << "/32768" << std::endl;
         return false;
     }
 }
