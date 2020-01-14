@@ -37,7 +37,7 @@ bool verifyRhonet(struct grid *grd, struct interpDensNet *idn, FPinterp tol)
                 // check if file reading went well
                 if (fin.good()) {
                     // if numbers the same: increment counter, else false
-                    if (std::abs(num_in - idn->rhon[i][j][k] < tol) {
+                    if (std::abs(num_in - idn->rhon[i][j][k] < tol)) {
                         res++;
                     }
                     else {
