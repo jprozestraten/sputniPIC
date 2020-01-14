@@ -41,13 +41,13 @@ bool verifyRhonet(struct grid *grd, struct interpDensNet *idn, FPinterp tol)
                         res++;
                     }
                     else {
-                        std::cerr << "_____________________________________" std::endl;
+                        std::cerr << "_____________________________________" << std::endl;
                         std::cerr << "   Wrong number at line " << line << std::endl;
                         std::cerr << "   rho_net.out " << num_in << " | " << "rhon[" << i << "][" << j << "][" << k << "] " << idn->rhon[i][j][k] << std::endl;
                         // std::cerr << "Relative difference " << std::abs((num_in - idn->rhon[i][j][k]) / std::min(num_in, idn->rhon[i][j][k])) << std::endl;
                         // return false;
                         std::cerr << "   Absolute difference " << std::abs(num_in - idn->rhon[i][j][k]) << std::endl;
-                        std::cerr << "_____________________________________" std::endl;
+                        std::cerr << "_____________________________________" << std::endl;
                     }
                 } 
                 else {
