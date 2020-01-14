@@ -169,8 +169,8 @@ int main(int argc, char **argv){
 
     // Print if results are correct
     std::cout << std::endl;
+    bool verification_result = verifyRhonet(&grd, &idn, 1e-3);
     std::cout << "****************************" << std::endl;
-    bool verification_result = verifyRhonet(&grd, &idn);
     std::cout << "   Results are correct: " << verification_result << std::endl;
     std::cout << "****************************" << std::endl;
 
