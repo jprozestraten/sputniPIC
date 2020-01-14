@@ -88,15 +88,11 @@ int main(int argc, char **argv){
     grid_a grd_gpu;
     EMfield_a field_gpu;
     particles_a part_gpu;
+    interpDensSpecies_a ids_gpu;
 
     //Allocation of pointers to struct for GPU variables for mover_PC
     particle_allocate_gpu(part, &part_gpu);
-
-
-    //Data allocation of arrays in structs
-    /*grid_allocate_gpu(&grd, grd_gpu);
-    field_allocate_gpu(field_gpu, &grd);
-    particle_allocate_gpu(part, part_gpu); */
+    interp_dens_species_allocate_gpu(&ids_gpu, &grd);
     field_allocate_gpu(&field_gpu, &grd);
     grid_allocate_gpu(&grd, &grd_gpu);
 
@@ -104,6 +100,8 @@ int main(int argc, char **argv){
     field_copy(&field, field_gpu, &grd);
     grid_copy(&grd, grd_gpu);
 
+
+    bool gpu_interp = false;
     // **********************************************************//
     // **** Start the Simulation!  Cycle index start from 1  *** //
     // **********************************************************//
@@ -138,8 +136,17 @@ int main(int argc, char **argv){
         // interpolation particle to grid
         iInterp = cpuSecond(); // start timer for the interpolation step
         // interpolate species
-        for (int is=0; is < param.ns; is++)
-            interpP2G(&part[is],&ids[is],&grd);
+        if(gpu_interp)
+        {
+            for (int is=0; is < param.ns; is++)
+                gpu_interpP2G(&part[is], &grd, &ids[is], &part_gpu, &ids_gpu, grd_gpu);
+            cudaDeviceSynchronize();
+        }
+        else {
+            for (int is=0; is < param.ns; is++)
+                cpu_interpP2G(&part[is],&ids[is],&grd);
+
+        }
 
         // stop profiler for interpP2G
         cudaProfilerStop();
@@ -202,6 +209,8 @@ int main(int argc, char **argv){
     particle_deallocate_gpu(&part_gpu);
     grid_deallocate_gpu(&grd_gpu);
     field_deallocate_gpu(&field_gpu);
+    interp_dens_species_deallocate_gpu(&ids_gpu);
+
 
     // exit
     return 0;
